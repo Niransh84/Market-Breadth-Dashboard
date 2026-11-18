@@ -254,19 +254,6 @@ header{padding:8px 14px;margin-bottom:8px}
 #tt{position:fixed;z-index:9999;pointer-events:none;display:none;background:var(--sf);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 18px rgba(15,23,42,.18);padding:9px 12px 8px;font:12px/1.35 "IBM Plex Sans",sans-serif;max-width:270px}
 #tt .th b{font-size:14px}#tt .th i{font-size:13px}#tt .ts{color:var(--mut);font-size:11px}#tt .tq{color:var(--mut);font-size:11px;margin:7px 0 3px}
 #tt .tr{display:flex;align-items:center;gap:6px;height:17px}#tt .tl{width:22px;text-align:right;color:var(--mut);font-size:11px}#tt .tb{height:11px;display:inline-block;opacity:.85}#tt .tr i{font-size:11.5px}#tt .na{color:var(--mut)}
-/* ---- Trade Suggestions ---- */
-#tradesView{display:none}body.trades #dash,body.trades #focusView{display:none!important}body.trades #tradesView{display:block}
-.tsx{font-size:12.5px;line-height:1.55;color:var(--ink)}.tsx b{color:var(--hi)}.tsx ul{margin:4px 0 0;padding-left:18px}.tsx li{margin:1px 0}
-.tsk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 0}.tsk .kr{border-top:0}
-.tsg{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:20px;border-radius:6px;font-size:10.5px;font-weight:700;color:#fff;padding:0 5px;margin-left:4px}
-.tsg.A{background:var(--hi)}.tsg.B{background:var(--sw)}.tsg.C{background:var(--mut)}
-.tsu{color:var(--mu);font-weight:600}.tsd{color:var(--md);font-weight:600}.tsm{color:var(--mut)}
-.tss{white-space:nowrap}.tss b{font-weight:700}.tsh{font-weight:700}.tsh.u{color:var(--mu)}.tsh.d{color:var(--md)}
-.tsc{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:3px}.tsc.cg{background:var(--mu)}.tsc.cr{background:var(--md)}.tsc.cn{background:var(--line)}
-.tssec{margin-bottom:12px}.tssec h3{margin:10px 0 6px;font-size:13px}.tssec h3 span{color:var(--mut);font-weight:500;font-size:11.5px}
-.tssec.bull h3{color:var(--mu)}.tssec.bear h3{color:var(--md)}
-table.fl td.ti{max-width:none;white-space:nowrap}.fl small{color:var(--mut);font-weight:500;margin-left:3px}
-@media (max-width:900px){.tsk{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head><body>
 <div class="app">
 <header>
@@ -274,7 +261,7 @@ table.fl td.ti{max-width:none;white-space:nowrap}.fl small{color:var(--mut);font
  <div class="note" id="ll-note" style="display:none">Criteria: Price×avg vol 60D > $100M · Avg vol 60D > 4.99M · ATR(14) > 2.5%</div>
  <div class="note" id="crypto-note" style="display:none">Criteria: Market cap > $1B</div>
  <details class="how"><summary>ⓘ How names are classified</summary><div><b>Bullish:</b> Daily or Weekly RSI ≥ 60<br><b>Bearish:</b> Daily or Weekly RSI ≤ 40<br><b>Strong:</b> D and W both agree (▲ / ▼ on tiles)<br><b>Conflict</b> (one bull, one bear) and all others → Sideways<br><b>Focus Up:</b> D, W or M ≥ 60 · buy zone = any of 1h/2h/4h/D/W in 40–50<br><b>Focus Down:</b> D, W or M ≤ 40 · sell zone = any of 1h/2h/4h/D/W in 50–60</div></details></div>
- <div class="tabs" style="margin-left:auto"><button class="btn active" data-i="QQQ">QQQ</button><button class="btn" data-i="LIQUID">Liquid Leaders</button><button class="btn" data-i="CRYPTO">Crypto</button><button class="btn" data-i="ETF">ETF</button><button class="btn" data-i="FOCUS">Daily Prep</button><button class="btn" data-i="TRADES">Trade Suggestions</button></div></div>
+ <div class="tabs" style="margin-left:auto"><button class="btn active" data-i="QQQ">QQQ</button><button class="btn" data-i="LIQUID">Liquid Leaders</button><button class="btn" data-i="CRYPTO">Crypto</button><button class="btn" data-i="ETF">ETF</button><button class="btn" data-i="FOCUS">Daily Prep</button></div></div>
  <div class="header-meta"><span class="sub" id="sub"></span></div>
 </header>
 <div id="dash">
@@ -291,7 +278,6 @@ table.fl td.ti{max-width:none;white-space:nowrap}.fl small{color:var(--mut);font
 <section class="panel" style="margin-top:12px"><div class="ph"><h2>Industry breakdown</h2><span class="sub">Dominant zone per industry · <b style="color:var(--hi)">click to filter</b></span></div><div class="groups" id="groups"></div></section>
 </div>
 <div id="focusView"></div>
-<div id="tradesView"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
 <script>
@@ -454,85 +440,4 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>current
 const q0=(new URLSearchParams(location.search).get("tab")||location.hash.replace(/^#/,"")).toUpperCase();
 const ok={QQQ:"QQQ",LIQUID:"LIQUID",LL:"LIQUID",CRYPTO:"CRYPTO",ETF:"ETF",FOCUS:"FOCUS"};
 switchTab(ok[q0]||"QQQ");
-// ---- Trade Suggestions (computed in-page from DATASETS on every load) ----
-const TSC={L_LO:35,L_HI:50,S_LO:50,S_HI:65,HI:60,LO:40,BR_UP:60,BR_DN:40,MIN_N:3};
-const TSL=[["1h","rsi_1h","1h"],["2h","rsi_2h","2h"],["4h","rsi_4h","4h"],["D","rsi_d","d"],["W","rsi_w","w"],["M","rsi_m","m"]];
-let tsOn=false;
-const tsTr=t=>(!nn(t.ema20)||!nn(t.ema60))?null:t.ema20>t.ema60?1:t.ema20<t.ema60?-1:0;
-const tsArrow=v=>v===1?'<span class="tsu">▲ Up</span>':v===-1?'<span class="tsd">▼ Down</span>':v===0?'<span class="tsm">● Mixed</span>':'<span class="tsm">n/a</span>';
-const tsQ=t=>{const q=t.trend_quad;if(q)return q;const s=tsTr(t);if(s==null||!nn(t.close))return null;const a=t.close>t.ema20;return s>0?(a?"Momentum Up":"Sideways in Uptrend"):(a?"Sideways in Downtrend":"Momentum Down")};
-const tsQS=q=>({"Momentum Up":"MU","Sideways in Uptrend":"SU","Sideways in Downtrend":"SD","Momentum Down":"MD"}[q]||"—");
-function tsUniverse(){const m=new Map();[["QQQ","QQQ"],["LIQUID","LL"]].forEach(([k,tag])=>((DATASETS[k]||{}).tickers||[]).forEach(t=>{
-  const e=m.get(t.ticker);if(e){if(!e.src.includes(tag))e.src.push(tag)}else m.set(t.ticker,{t,src:[tag]})}));
- return{stocks:[...m.values()],etfs:((DATASETS.ETF||{}).tickers||[]).map(t=>({t,src:["ETF"]}))}}
-function tsIndustries(U){const I=new Map(),g=k=>I.get(k)||I.set(k,{ind:k,n:0,up:0,dn:0,rd:[],etfs:[]}).get(k);
- U.stocks.forEach(({t})=>{const s=tsTr(t);if(s==null)return;const o=g(t.industry||"Unclassified");o.n++;if(s>0)o.up++;if(s<0)o.dn++;if(nn(t.rsi_d))o.rd.push(t.rsi_d)});
- U.etfs.forEach(({t})=>g(t.industry||"Unclassified").etfs.push(t));
- I.forEach(o=>{o.pct=o.n?o.up/o.n*100:null;o.pdn=o.n?o.dn/o.n*100:null;o.avgD=o.rd.length?o.rd.reduce((a,b)=>a+b,0)/o.rd.length:null;
-  o.bt=o.n>=TSC.MIN_N?(o.pct>=TSC.BR_UP?1:o.pct<=TSC.BR_DN?-1:0):null;
-  const eu=o.etfs.filter(e=>tsTr(e)===1).length,ed=o.etfs.filter(e=>tsTr(e)===-1).length;
-  o.et=o.etfs.length?(eu>ed?1:ed>eu?-1:0):null;
-  o.agree=o.bt!=null&&o.et!=null?o.bt===o.et:null;
-  o.trend=o.bt!=null&&o.et!=null?(o.bt===o.et?o.bt:0):o.bt!=null?o.bt:o.et});return I}
-function tsBest(t,dir){let best=null;
- for(let i=0;i<5;i++){const v=t[TSL[i][1]];if(!nn(v))continue;
-  if(dir>0?(v<TSC.L_LO||v>TSC.L_HI):(v<TSC.S_LO||v>TSC.S_HI))continue;
-  const H=TSL.slice(i+1,i+3).map(([l,k])=>({l,v:t[k]})).filter(h=>nn(h.v)),hit=H.filter(h=>dir>0?h.v>TSC.HI:h.v<TSC.LO);if(!hit.length)continue;
-  const dist=Math.abs(v-(dir>0?40:60)),sc=40*Math.max(0,1-dist/10)+15*hit.length;
-  if(!best||sc>best.sc||(sc===best.sc&&dist<best.dist))best={i,l:TSL[i][0],v,H,hit,dist,sc}}
- return best}
-function tsRows(list,dir,I,isEtf){return list.map(({t,src})=>{const st=tsTr(t);if(st!==dir)return null;
-  const o=I.get(t.industry||"Unclassified")||{bt:null,et:null,trend:null,pct:null,pdn:null,n:0,etfs:[]};
-  const it=isEtf?(o.bt==null?st:(o.bt===st?st:0)):o.trend;if(it!==dir)return null;
-  const b=tsBest(t,dir);if(!b)return null;
-  const br=o.bt!=null?(dir>0?o.pct:o.pdn)/100*20:10,ea=o.et===dir?10:0,sc=Math.round(b.sc+br+ea);
-  return{t,src,b,o,it,sc,g:sc>=75?"A":sc>=60?"B":"C"}}).filter(Boolean).sort((a,b)=>b.sc-a.sc||a.b.dist-b.b.dist)}
-function tsEtfTxt(o){if(!o.etfs.length)return '<span class="tsm">no ETF</span>';
- return o.etfs.map(e=>{const s=tsTr(e);return `<span class="${s>0?"tsu":s<0?"tsd":"tsm"}" title="${esc(e.ticker)} ${esc(tsQ(e)||"")} · D ${r1(e.rsi_d)} · W ${r1(e.rsi_w)}">${esc(e.ticker)} ${tsQS(tsQ(e))}</span> <small>D${nn(e.rsi_d)?Math.round(e.rsi_d):"–"}/W${nn(e.rsi_w)?Math.round(e.rsi_w):"–"}</small>`}).join(" · ")}
-function tsTable(rows,dir,isEtf){if(!rows.length)return '<div class="sub" style="padding:10px">No qualifying names today</div>';
- const T=dir>0?40:60;
- return `<div class="tw"><table class="fl"><thead><tr><th>#</th><th>Ticker</th><th>Type</th><th>Industry</th><th>Setup (lower TF vs next two higher)</th><th>Δ ${T}</th><th>Score</th>${TFL.map(l=>`<th class="tf">${l}</th>`).join("")}<th>Stock trend</th><th>Industry trend · breadth · ETF</th><th>ATRP</th><th>Candle</th></tr></thead><tbody>`+
- rows.map((r,x)=>{const t=r.t,b=r.b,o=r.o,q=tsQ(t),pe=nn(t.close)&&nn(t.ema20)&&t.ema20?((t.close/t.ema20-1)*100):null;
-  const setup=`<span class="tss"><b>${b.l} ${b.v.toFixed(1)}</b> vs ${b.H.map(h=>`<span class="tsh${b.hit.includes(h)?(dir>0?" u":" d"):""}">${h.l} ${Math.round(h.v)}</span>`).join(", ")}</span>`;
-  const hiIdx=[b.i+1,b.i+2];
-  const lad=TSL.map(([l,k],j)=>{const v=t[k];if(!nn(v))return '<td class="tf"><span class="r zn">n/a</span></td>';const c=v>=60?"zb":v<=40?"zr":"zs",ring=j===b.i;
-   return `<td class="tf"><span class="r ${c}${ring?" ring":""}" title="${l} ${v.toFixed(2)}${ring?" · setup TF":hiIdx.includes(j)?" · higher TF":""}">${Math.round(v)}</span></td>`}).join("");
-  const br=o.n?`${(dir>0?o.pct:o.pdn).toFixed(0)}% ${dir>0?"up":"down"} <small>(${o.n})</small>`:'<span class="tsm">no stocks</span>';
-  const ag=o.agree==null?"":o.agree?' <span title="Stock breadth and industry ETF agree">✓</span>':' <span title="Stock breadth and industry ETF disagree">≠</span>';
-  const ock=TSL[b.i][2],op=t["open_"+ock],cl=t["close_"+ock],cc=nn(op)&&nn(cl)?(cl>op?"cg":cl<op?"cr":"cn"):"cn";
-  return `<tr><td>${x+1}</td><td class="ti"><a href="${TV}${encodeURIComponent(t.symbol||t.ticker)}" target="_blank" rel="noopener">${esc(t.ticker)}</a><small>${r.src.join("·")}</small></td><td>${isEtf?"ETF":"Stock"}</td><td class="in" title="${esc(t.industry||"Unclassified")}">${esc(t.industry||"Unclassified")}</td><td>${setup}</td><td>${b.dist.toFixed(1)}</td><td>${r.sc}<span class="tsg ${r.g}">${r.g}</span></td>${lad}`+
-   `<td class="tss">${tsArrow(tsTr(t))} <small>${esc(q||"")}${pe!=null?` · px ${pe>=0?"+":""}${pe.toFixed(1)}% vs EMA20`:""}</small></td>`+
-   `<td>${tsArrow(r.it)} · ${br} · ${tsEtfTxt(o)}${ag}</td><td>${nn(t.atrp)?t.atrp.toFixed(1)+"%":"—"}</td><td class="tss" title="${b.l} candle (info only, not a filter)"><span class="tsc ${cc}"></span>${b.l} ${cc==="cg"?"green":cc==="cr"?"red":"—"}</td></tr>`}).join("")+"</tbody></table></div>"}
-function tsIndTable(I){const L=[...I.values()].sort((a,b)=>(b.pct??-1)-(a.pct??-1)||a.ind.localeCompare(b.ind));
- return `<div class="tw" style="max-height:520px"><table class="fl"><thead><tr><th>Industry</th><th>Stocks</th><th>% EMA20&gt;EMA60</th><th>Avg D RSI</th><th>Breadth trend</th><th>Industry ETF(s) · quadrant · D/W RSI</th><th>ETF trend</th><th>Agree</th><th>Industry trend</th></tr></thead><tbody>`+
- L.map(o=>`<tr><td>${esc(o.ind)}</td><td>${o.n||"—"}</td><td>${o.pct!=null?o.pct.toFixed(0)+"%":"—"}</td><td>${r1(o.avgD)}</td><td>${o.n&&o.n<TSC.MIN_N?'<span class="tsm">too few</span>':tsArrow(o.bt)}</td><td>${tsEtfTxt(o)}</td><td>${tsArrow(o.et)}</td><td>${o.agree==null?"—":o.agree?"✓":"≠"}</td><td>${tsArrow(o.trend)}</td></tr>`).join("")+"</tbody></table></div>"}
-function tsCompute(){const U=tsUniverse(),I=tsIndustries(U);
- return{U,I,ls:tsRows(U.stocks,1,I,false),le:tsRows(U.etfs,1,I,true),ss:tsRows(U.stocks,-1,I,false),se:tsRows(U.etfs,-1,I,true)}}
-function renderTrades(){const R=tsCompute(),hasEma=R.U.stocks.some(x=>nn(x.t.ema20));
- const kr=(c,lab,sm,v)=>`<div class="kr ${c}"><i></i><span>${lab}<small>${sm}</small></span><b>${v}</b></div>`;
- const ts=[TS.QQQ,TS.LIQUID,TS.ETF].filter(Boolean).join(" · ");
- $("tradesView").innerHTML=`<section class="panel" style="margin-bottom:12px"><div class="ph"><h2>Trade Suggestions</h2><span class="sub">Stocks (QQQ + Liquid Leaders, de-duplicated) + ETFs · crypto excluded · data: ${esc(ts)}</span></div>
- <div class="tsx">Looks for a lower-timeframe RSI pulling back to a bounce level while the next two higher timeframes are still strong, with the stock trend and its industry trend pointing the same way.
- <ul><li><b>Long:</b> a lower TF (1h, 2h, 4h, D or W) RSI in ${TSC.L_LO}–${TSC.L_HI} (closer to 40 = better) <i>and</i> at least one of the next two higher TFs &gt; ${TSC.HI} (both = better). Ladder 1h→2h→4h→D→W→M, e.g. 1h checks 2h &amp; 4h, D checks W &amp; M, W checks M only. Stock EMA20 &gt; EMA60 and industry trend Up.</li>
- <li><b>Short (mirror):</b> lower TF RSI in ${TSC.S_LO}–${TSC.S_HI} (closer to 60 = better), at least one of the next two higher TFs &lt; ${TSC.LO}, stock EMA20 &lt; EMA60 and industry trend Down.</li>
- <li><b>Industry trend:</b> stock breadth = share of the industry's stocks with EMA20 &gt; EMA60 (Up ≥ ${TSC.BR_UP}%, Down ≤ ${TSC.BR_DN}%, needs ≥ ${TSC.MIN_N} stocks) compared with the industry ETF(s) (EMA20 vs EMA60). If both exist they must agree (✓) or the industry is Mixed (≠); otherwise whichever exists is used. For ETF rows: the ETF's own trend, confirmed by its category's stock breadth where available.</li>
- <li><b>Score (0–100):</b> closeness to 40/60 (40) + higher TFs beyond 60/40 (15 each) + breadth strength (20) + ETF agreement (10). A ≥ 75 · B ≥ 60 · C below. Best TF pair per name shown; ring = setup TF. Candle colour is info only, not a filter.</li></ul></div>
- <div class="tsk">${kr("bull","Long stocks","uptrend + industry up",R.ls.length)}${kr("bull","Long ETFs","uptrend + category up",R.le.length)}${kr("bear","Short stocks","downtrend + industry down",R.ss.length)}${kr("bear","Short ETFs","downtrend + category down",R.se.length)}</div>
- ${hasEma?"":'<div class="note" style="color:var(--md)">EMA20/EMA60 not present in this data build — trends unavailable, run the Trade Suggestions refresh.</div>'}</section>
- <section class="panel tssec bull" style="margin-bottom:12px"><div class="ph"><h2>▲ Long suggestions</h2><span class="sub">lower TF near 40 · higher TF &gt; 60 · stock &amp; industry up</span></div>
- <h3>Stocks <span>${R.ls.length}</span></h3>${tsTable(R.ls,1,false)}<h3>ETFs <span>${R.le.length}</span></h3>${tsTable(R.le,1,true)}</section>
- <section class="panel tssec bear" style="margin-bottom:12px"><div class="ph"><h2>▼ Short suggestions</h2><span class="sub">lower TF near 60 · higher TF &lt; 40 · stock &amp; industry down</span></div>
- <h3>Stocks <span>${R.ss.length}</span></h3>${tsTable(R.ss,-1,false)}<h3>ETFs <span>${R.se.length}</span></h3>${tsTable(R.se,-1,true)}</section>
- <section class="panel"><div class="ph"><h2>Industry trends · stock breadth vs ETF</h2><span class="sub">sorted by % of stocks with EMA20 &gt; EMA60</span></div>${tsIndTable(R.I)}</section>`;
- $("sub").innerHTML=`Trade Suggestions · <b style="color:var(--hi)">${R.ls.length+R.le.length}</b> long · <b style="color:var(--hi)">${R.ss.length+R.se.length}</b> short · stocks + ETFs`;
- return R}
-const _swTS=switchTab;
-switchTab=function(i){if(i!=="TRADES"){tsOn=false;document.body.classList.remove("trades");return _swTS(i)}
- tsOn=true;document.body.classList.remove("focus");document.body.classList.add("trades");
- document.querySelectorAll(".tabs .btn").forEach(b=>b.classList.toggle("active",b.dataset.i===i));
- $("ll-note").style.display="none";$("crypto-note").style.display="none";
- try{history.replaceState(null,"","#trades")}catch(e){}
- renderTrades()};
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(tsOn)renderTrades()});
-if(["TRADES","TRADE","SUGGESTIONS","TS"].includes(q0))switchTab("TRADES");
 </script></body></html>
